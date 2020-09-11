@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.meet">
+
+    <application
+        android:name=".base.BaseApp"
+        android:requestLegacyExternalStorage="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+
+
+        <!--Bmob-->
+        <provider
+            android:name="cn.bmob.v3.util.BmobContentProvider"
+            android:authorities="com.example.meet.BmobContentProvider" />
+
+        <!--OPPO-->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.2" />
+
+        <!--小米适配-->
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait|landscape" />
+        <activity android:name=".test.Test2Activity"
+            android:theme="@style/AppThemeFull">
+       </activity>
+
+        <!--引导页-->
+        <activity
+            android:name=".ui.IndexActivity"
+            android:theme="@style/AppThemeFull">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <!--引导-->
+        <activity
+            android:name=".ui.GuideActivity"
+
+            android:theme="@style/AppThemeFull" >
+
+
+        </activity>
+
+        <!--登录-->
+        <activity
+            android:name=".ui.LoginActivity"
+
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+
+
+        </activity>
+
+        <!--主页-->
+        <activity
+            android:name=".MainActivity"
+
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity android:name=".test.TestActivity">
+
+        </activity>
+
+        <activity android:name=".ui.FirstUploadActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".ui.AddFriendActivity" />
+
+
+
+        <!--FileProvide-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.meet.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+
+
+
+
+    </application>
+</manifest>
