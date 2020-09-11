@@ -23,6 +23,7 @@ import java.util.Date;
  * Profile :
  */
 public class FileHelper {
+
     private static volatile FileHelper mInstance = null;
     private SimpleDateFormat simpleDateFormat ;
     public static final int CAMERA_REQUEST_CODE = 1004;

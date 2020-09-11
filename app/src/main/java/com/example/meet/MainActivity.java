@@ -89,21 +89,21 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
 
         // mMainLayout = (FrameLayout) findViewById(R.id.mMainLayout);
 
-        iv_star = (ImageView) findViewById(R.id.iv_star);
-        tv_star = (TextView) findViewById(R.id.tv_star);
-        ll_star = (LinearLayout) findViewById(R.id.ll_star);
+        iv_star = findViewById(R.id.iv_star);
+        tv_star = findViewById(R.id.tv_star);
+        ll_star = findViewById(R.id.ll_star);
 
-        iv_square = (ImageView) findViewById(R.id.iv_square);
-        tv_square = (TextView) findViewById(R.id.tv_square);
-        ll_square = (LinearLayout) findViewById(R.id.ll_square);
+        iv_square = findViewById(R.id.iv_square);
+        tv_square = findViewById(R.id.tv_square);
+        ll_square = findViewById(R.id.ll_square);
 
-        iv_chat = (ImageView) findViewById(R.id.iv_chat);
-        tv_chat = (TextView) findViewById(R.id.tv_chat);
-        ll_chat = (LinearLayout) findViewById(R.id.ll_chat);
+        iv_chat = findViewById(R.id.iv_chat);
+        tv_chat = findViewById(R.id.tv_chat);
+        ll_chat = findViewById(R.id.ll_chat);
 
-        iv_me = (ImageView) findViewById(R.id.iv_me);
-        tv_me = (TextView) findViewById(R.id.tv_me);
-        ll_me = (LinearLayout) findViewById(R.id.ll_me);
+        iv_me = findViewById(R.id.iv_me);
+        tv_me = findViewById(R.id.tv_me);
+        ll_me = findViewById(R.id.ll_me);
 
         ll_star.setOnClickListener(this);
         ll_square.setOnClickListener(this);
@@ -171,7 +171,7 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
                Log.d("aaa","112");
                DialogManager.getInstance().hide(mUploadView);
                Log.d("aaa","123");
-               FirstUploadActivity.startActivity(MainActivity.this,UPLOAD_REQUEST_CODE);
+               FirstUploadActivity.startActivity(MainActivity.this,RESULT_FIRST_USER);
            }
        });
 

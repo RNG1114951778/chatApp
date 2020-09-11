@@ -40,7 +40,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class MeFragment extends BaseFragment implements View.OnClickListener {
 
-       private CircleImageView iv_me_photo;
+    private CircleImageView iv_me_photo;
     private TextView tv_nickname;
     private LinearLayout ll_me_info;
     private LinearLayout ll_new_friend;
@@ -78,7 +78,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         ll_setting.setOnClickListener(this);
         ll_notice.setOnClickListener(this);
 
-        //loadMeInfo();
+        loadMeInfo();
 
 //        //监听连接状态
 //        CloudManager.getInstance().setConnectionStatusListener(connectionStatus -> {
@@ -116,7 +116,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
      */
     private void loadMeInfo( ) {
         IMUser imUser = BmobManager.getInstance().getUser();
-        GlideHelper.loadUrl(getActivity(), imUser.getPhoto(),  iv_me_photo);
+        GlideHelper.loadUrl(getActivity(), imUser.getPhoto(), iv_me_photo);
         tv_nickname.setText(imUser.getNickName());
     }
 

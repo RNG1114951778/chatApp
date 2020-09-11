@@ -2,6 +2,7 @@ package com.example.framework.helper;
 
 import android.content.Context;
 import android.media.Image;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +29,7 @@ public class GlideHelper {
 //                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
+
 
     }
 }

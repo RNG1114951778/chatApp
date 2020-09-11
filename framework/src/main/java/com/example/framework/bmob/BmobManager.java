@@ -1,6 +1,8 @@
 package com.example.framework.bmob;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.framework.Framework;
 
@@ -28,7 +30,7 @@ public class BmobManager {
 
     private volatile static BmobManager mInstance = null;
     private static final String BMOB_SDK_ID = "e1a8e2c718ff577c1de8a8991a11a833";
-
+   //private static final String BMOB_SDK_ID = "f8efae5debf319071b44339cf51153fc";
 
     private BmobManager() {
 
@@ -90,44 +92,46 @@ public class BmobManager {
         return BmobUser.isLogin();
     }
 
-    public void uploadFirstPhoto(final String nickname, File file, final OnUploadPhotoListner listner){
+    public void uploadFirstPhoto(final String nickName, File file, final OnUploadPhotoListner listener) {
         /**
-         * 1.上传文件
+         * 1.上传文件拿到地址
          * 2.更新用户信息
          */
-
-         final IMUser imUser = getUser();
-         final BmobFile bmobFile = new BmobFile(file);
-         bmobFile.upload(new UploadFileListener() {
+        final IMUser imUser = getUser();
+        //独立域名 设置 - 应用配置 - 独立域名 一年/100
+        //免费的办法： 使用我的Key
+        //你如果怕数据冲突
+        //解决办法：和我的类名不一样即可
+        final BmobFile bmobFile = new BmobFile(file);
+        bmobFile.uploadblock(new UploadFileListener() {
             @Override
             public void done(BmobException e) {
-                if(e == null){
-
-                    imUser.setNickName(nickname);
+                if (e == null) {
+                    //上传成功
+                    imUser.setNickName(nickName);
                     imUser.setPhoto(bmobFile.getFileUrl());
-                    imUser.setTokenNickName(nickname);
-                    imUser.setTokenPhoto(bmobFile.getUrl());
 
+                    imUser.setTokenNickName(nickName);
+                    imUser.setTokenPhoto(bmobFile.getFileUrl());
+                    Log.d("wtf", "done: ");
+                    //更新用户信息
                     imUser.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
-                            if(e == null){
-                                listner.OnUpdateDone();
-
-                            }else{
-                                listner.OnupdateFalse(e);
+                            if (e == null) {
+                                listener.OnUpdateDone();
+                            } else {
+                                listener.OnupdateFalse(e);
                             }
                         }
                     });
-
-
-                }else {
-                    listner.OnupdateFalse(e);
+                } else {
+                    listener.OnupdateFalse(e);
                 }
             }
         });
-
     }
+
 
     public interface OnUploadPhotoListner{
         void OnUpdateDone();

@@ -47,7 +47,7 @@ public class IndexActivity extends AppCompatActivity {
      * 进入主页，根据不同情况进入不同主页
      */
     private void startMain() {
-        SpUtils.getInstance().initSp(this);
+       // SpUtils.getInstance().initSp(this);
         //1 是不是第一次
         boolean isFirstApp = SpUtils.getInstance().getBoolean(Constants.SP_IS_FIRST_APP,true);
 
@@ -61,30 +61,31 @@ public class IndexActivity extends AppCompatActivity {
         }
         else {
             //2.非第一次，判断是否登陆过
-            String token = SpUtils.getInstance().getString(Constants.SP_TOKEN,"");
-            if(TextUtils.isEmpty(token)){
-                if(BmobManager.getInstance().isLogin()){
-                //跳转至主页
+            String token = SpUtils.getInstance().getString(Constants.SP_TOKEN, "");
+            if (TextUtils.isEmpty(token)) {
+                if (BmobManager.getInstance().isLogin()) {
+                    //跳转至主页
                     intent.setClass(this, MainActivity.class);
 
-            }
-            else {
+                } else {
                     //跳转至登陆
 
                     intent.setClass(this, LoginActivity.class);
                 }
-            }else {
-                    //跳转至登陆
+            } else {
+                //跳转至登陆
 
-                    intent.setClass(this,MainActivity.class);
+                intent.setClass(this, MainActivity.class);
 
-                }
+            }
+
+        }
 
 
                 startActivity(intent);
             finish();
 
-        }
+
     }
 
     @Override
