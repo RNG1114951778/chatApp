@@ -21,6 +21,9 @@ allprojects {
         jcenter()
         maven {
             url rootProject.ext.maven["bombUrl"]
+            }
+        maven {
+            url rootProject.ext.maven["Cloud"]
         }
     }
 }

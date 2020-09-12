@@ -34,6 +34,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api rootProject.ext.dependencies["appcompat"]
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -46,5 +47,10 @@ dependencies {
     api rootProject.ext.dependencies["tagcloud"]
     api rootProject.ext.dependencies["circle"]
     api rootProject.ext.dependencies["gilde"]
+
+    //api 'cn.rongcloud.sdk:rtc_lib:4.0.2'  // 音视频基础能力库
+    api 'cn.rongcloud.sdk:im_lib:4.0.2' // 即时通讯基础能力库
+    //api 'cn.rongcloud.sdk:call_lib:4.0.2' // 音视频呼叫信令
+    api 'cn.rongcloud.sdk:im_kit:4.0.0.1'
 
 }

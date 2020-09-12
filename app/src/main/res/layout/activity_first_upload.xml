@@ -27,8 +27,8 @@
 
 
             android:id="@+id/iv_photo"
-            android:layout_width="245dp"
-            android:layout_height="245dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_centerInParent="true"
             android:src="@drawable/img_me" />
 
@@ -39,7 +39,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:text="@string/text_upload_nickname_title"
         android:textColor="@android:color/black"
@@ -47,12 +47,86 @@
 
     <EditText
         android:id="@+id/et_nickname"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_width="239dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/login_edit_bg"
         android:gravity="center"
         android:hint="@string/text_upload_nickname"
         android:paddingLeft="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/sexss"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_sex"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_edit_bg"
+        android:gravity="center"
+        android:hint="@string/sexss"
+        android:paddingLeft="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/xingzuo"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_xingzuo"
+        android:layout_width="239dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_edit_bg"
+        android:gravity="center"
+        android:hint="@string/xingzuo"
+        android:paddingLeft="5dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/age"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_age"
+        android:layout_width="239dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_edit_bg"
+        android:gravity="center"
+        android:hint="@string/age"
+        android:paddingLeft="5dp" />
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/hobby"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_hobby"
+        android:layout_width="242dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_edit_bg"
+        android:gravity="center"
+        android:hint="@string/hobby"
+        android:paddingLeft="5dp" />
+
 
     <Button
         android:id="@+id/btn_upload"

@@ -92,7 +92,8 @@ public class BmobManager {
         return BmobUser.isLogin();
     }
 
-    public void uploadFirstPhoto(final String nickName, File file, final OnUploadPhotoListner listener) {
+    public void uploadFirstPhoto(final String nickName, final boolean sex,final String xingzuo,final int age,final String hobby,
+                                 File file, final OnUploadPhotoListner listener) {
         /**
          * 1.上传文件拿到地址
          * 2.更新用户信息
@@ -102,6 +103,11 @@ public class BmobManager {
         //免费的办法： 使用我的Key
         //你如果怕数据冲突
         //解决办法：和我的类名不一样即可
+        // String nickName = et_nickname.getText().toString().trim();
+        //        String sex = et_sex.getText().toString().trim();
+        //        String xingzuo = et_xingzuo.getText().toString().trim();
+        //        String age = et_age.getText().toString().trim();
+        //        String hobby = et_hobby.getText().toString().trim();
         final BmobFile bmobFile = new BmobFile(file);
         bmobFile.uploadblock(new UploadFileListener() {
             @Override
@@ -110,6 +116,10 @@ public class BmobManager {
                     //上传成功
                     imUser.setNickName(nickName);
                     imUser.setPhoto(bmobFile.getFileUrl());
+                    imUser.setAge(age);
+                    imUser.setSex(sex);
+                    imUser.setConstellation(xingzuo);
+                    imUser.setHobby(hobby);
 
                     imUser.setTokenNickName(nickName);
                     imUser.setTokenPhoto(bmobFile.getFileUrl());
@@ -144,6 +154,11 @@ public class BmobManager {
 
     }
 
+    public void queryObjectIdUser(String objectId, FindListener<IMUser> listener){
+
+        baseQuery("objectId",objectId,listener);
+
+    }
     public void queryAllUser (FindListener<IMUser> listener){
         BmobQuery<IMUser> query = new BmobQuery<>();
         query.findObjects(listener);

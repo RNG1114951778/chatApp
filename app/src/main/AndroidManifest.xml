@@ -19,6 +19,7 @@
 
 
     <application
+        android:networkSecurityConfig="@xml/network_secuirty_config"
         android:name=".base.BaseApp"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
@@ -52,10 +53,6 @@
             android:name=".ui.IndexActivity"
             android:theme="@style/AppThemeFull">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <!--引导-->
@@ -80,7 +77,12 @@
         <activity
             android:name=".MainActivity"
 
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".test.TestActivity">
 
@@ -89,7 +91,12 @@
         <activity android:name=".ui.FirstUploadActivity"
             android:theme="@style/AppTheme" />
 
-        <activity android:name=".ui.AddFriendActivity" />
+        <activity android:name=".ui.AddFriendActivity">
+
+
+        </activity>
+
+        <activity android:name=".ui.UserInfoActivity"/>
 
 
 
@@ -106,7 +113,20 @@
         </provider>
 
 
+        <!--离线消息-->
+        <receiver
+            android:name="receiver.SealNotificationReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="io.rong.push.intent.MESSAGE_ARRIVED" />
+                <action android:name="io.rong.push.intent.MESSAGE_CLICKED" />
+                <action android:name="io.rong.push.intent.THIRD_PARTY_PUSH_STATE" />
+            </intent-filter>
+        </receiver>
 
+        <service
+            android:name=".service.CloudService"
+            android:exported="true" />
 
 
 

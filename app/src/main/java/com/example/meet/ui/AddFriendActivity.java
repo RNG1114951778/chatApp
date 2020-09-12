@@ -1,30 +1,32 @@
+
 package com.example.meet.ui;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.framework.utils.CommonUtils;
 import com.example.meet.R;
-
-
-import com.example.meet.adapter.AddFriendAdapter;
+import com.example.meet.model.AddFriendModel;
+import com.example.framework.adapter.CommonAdapter;
+import com.example.framework.adapter.CommonViewHolder;
 import com.example.meet.base.BaseBackActivity;
 import com.example.framework.bmob.BmobManager;
 import com.example.framework.bmob.IMUser;
 
-import com.example.meet.model.AddFriendModel;
+import com.example.framework.utils.CommonUtils;
+import com.example.framework.utils.LogUtils;
+import com.example.meet.ui.UserInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,13 +55,11 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
     private LinearLayout ll_to_contact;
     private EditText et_phone;
     private ImageView iv_search;
-      private RecyclerView mSearchResultView;
-
-
+    private RecyclerView mSearchResultView;
 
     private View include_empty_view;
 
-    private AddFriendAdapter mAddFriendAdapter;
+    private CommonAdapter mAddFriendAdapter;
     private List<AddFriendModel> mList = new ArrayList<>();
 
     @Override
@@ -77,12 +77,12 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
 
         include_empty_view = findViewById(R.id.include_empty_view);
 
-        ll_to_contact = (LinearLayout) findViewById(R.id.ll_to_contact);
+        ll_to_contact = findViewById(R.id.ll_to_contact);
 
-        et_phone = (EditText) findViewById(R.id.et_phone);
-        iv_search = (ImageView) findViewById(R.id.iv_search);
+        et_phone = findViewById(R.id.et_phone);
+        iv_search = findViewById(R.id.iv_search);
 
-        mSearchResultView = (RecyclerView) findViewById(R.id.mSearchResultView);
+        mSearchResultView = findViewById(R.id.mSearchResultView);
 
         ll_to_contact.setOnClickListener(this);
         iv_search.setOnClickListener(this);
@@ -91,24 +91,70 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
         mSearchResultView.setLayoutManager(new LinearLayoutManager(this));
         mSearchResultView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        Log.d("imuser", "00000 ");
-        mAddFriendAdapter = new AddFriendAdapter(this, mList);
-        mSearchResultView.setAdapter(mAddFriendAdapter);
-
-        mAddFriendAdapter.setOnclicklistener(new AddFriendAdapter.onClickListener() {
+        mAddFriendAdapter = new CommonAdapter<>(mList, new CommonAdapter.OnMoreBindDataListener<AddFriendModel>() {
             @Override
-            public void onclick(int position) {
-                Toast.makeText(AddFriendActivity.this, position, Toast.LENGTH_SHORT).show();
+            public int getItemType(int position) {
+                return mList.get(position).getType();
+            }
+
+            @Override
+            public void onBindViewHolder(final AddFriendModel model, CommonViewHolder viewHolder, int type, int position) {
+                if (type == TYPE_TITLE) {
+                    viewHolder.setText(R.id.tv_title, model.getTitle());
+                } else if (type == TYPE_CONTENT) {
+                    //设置头像
+                    viewHolder.setImageUrl(AddFriendActivity.this, R.id.iv_photo, model.getPhoto());
+                    //设置性别
+                    viewHolder.setImageResource(R.id.iv_sex,
+                            model.isSex() ? R.drawable.img_boy_icon : R.drawable.img_girl_icon);
+                    //设置昵称
+                    viewHolder.setText(R.id.tv_nickname, model.getNickName());
+                    //年龄
+                    viewHolder.setText(R.id.tv_age, model.getAge() + getString(R.string.text_search_age));
+                    //设置描述
+                    viewHolder.setText(R.id.tv_desc, model.getDesc());
+
+                    //点击事件
+                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            UserInfoActivity.startActivity(AddFriendActivity.this,
+                                    model.getUserId());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public int getLayoutId(int type) {
+                if (type == TYPE_TITLE) {
+                    return R.layout.layout_search_title_item;
+                } else if (type == TYPE_CONTENT) {
+                    return R.layout.layout_search_user_item;
+                }
+                return 0;
             }
         });
-    }
 
+        mSearchResultView.setAdapter(mAddFriendAdapter);
+    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
-
+//            //跳转到从通讯录导入
+//            case R.id.ll_to_contact:
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    //处理权限
+//                    if (checkPermissions(Manifest.permission.READ_CONTACTS)) {
+//                        startActivity(new Intent(this, ContactFirendActivity.class));
+//                    } else {
+//                        requestPermission(new String[]{Manifest.permission.READ_CONTACTS});
+//                    }
+//                } else {
+//                    startActivity(new Intent(this, ContactFirendActivity.class));
+//                }
+//                break;
             case R.id.iv_search:
                 queryPhoneUser();
                 break;
@@ -121,122 +167,113 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
     private void queryPhoneUser() {
         //1.获取电话号码
         String phone = et_phone.getText().toString().trim();
-
         if (TextUtils.isEmpty(phone)) {
             Toast.makeText(this, getString(R.string.text_login_phone_null),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //过滤自己
-       String phonrNumber = BmobManager.getInstance().getUser().getMobilePhoneNumber();
-        if (phone.equals(phonrNumber)){
-            Toast.makeText(this, "查自己干啥", Toast.LENGTH_SHORT).show();
+        //2.过滤自己
+        String phoneNumber = BmobManager.getInstance().getUser().getMobilePhoneNumber();
+        LogUtils.i("phoneNumber:" + phoneNumber);
+        if (phone.equals(phoneNumber)) {
+            Toast.makeText(this, getString(R.string.text_add_friend_no_me), Toast.LENGTH_SHORT).show();
             return;
         }
 
-
-
-        //2.查询
+        //3.查询
         BmobManager.getInstance().queryPhoneUsr(phone, new FindListener<IMUser>() {
             @Override
             public void done(List<IMUser> list, BmobException e) {
+             //   KeyWordManager.getInstance().hideKeyWord(AddFriendActivity.this);
+                if (e != null) {
+                    return;
+                }
                 if (CommonUtils.isEmpty(list)) {
-
                     IMUser imUser = list.get(0);
-
-
                     include_empty_view.setVisibility(View.GONE);
                     mSearchResultView.setVisibility(View.VISIBLE);
-                    Log.d("imuser", String.valueOf( mList.size()));
 
-
+                    //每次你查询有数据的话则清空
                     mList.clear();
 
-                    addTitle("结果");
-
-
+                    addTitle(getString(R.string.text_add_friend_title));
                     addContent(imUser);
                     mAddFriendAdapter.notifyDataSetChanged();
 
-                    pushUser();
-
-
-
-                }else {
+                    //推荐
+                    pushUser(phone);
+                } else {
+                    //显示空数据
                     include_empty_view.setVisibility(View.VISIBLE);
                     mSearchResultView.setVisibility(View.GONE);
                 }
-
             }
         });
     }
 
-    public void pushUser(){
-        //查询所有好友 取100个
+    /**
+     * 推荐好友
+     *
+     * @param phone 过滤所查询的电话号码
+     */
+    private void pushUser(String phone) {
+        //查询所有的好友 取100个
         BmobManager.getInstance().queryAllUser(new FindListener<IMUser>() {
             @Override
             public void done(List<IMUser> list, BmobException e) {
-                if(e == null){
-                    if(CommonUtils.isEmpty(list)){
-                        addTitle("好友推荐");
-                        if(list.size() <= 100){
-                            int num = (list.size() <= 100)?  list.size():100;
-                                    for(int i = 0;i < num;i++){
-                                        String phonrNumber = BmobManager.getInstance().getUser().getMobilePhoneNumber();
-                                        if(list.get(i).getMobilePhoneNumber().equals(phonrNumber)){
-                                            continue;
-                                        }
+                if (e == null) {
+                    if (CommonUtils.isEmpty(list)) {
+                        addTitle(getString(R.string.text_add_friend_content));
+                        int num = (list.size() <= 100) ? list.size() : 100;
+                        for (int i = 0; i < num; i++) {
+                            //也不能自己推荐给自己
+                            String phoneNumber = BmobManager.getInstance().getUser().getMobilePhoneNumber();
+                            if (list.get(i).getMobilePhoneNumber().equals(phoneNumber)) {
+                                //跳过本次循环
+                                continue;
+                            }
+                            //也不能查询到所查找的好友
+                            if (list.get(i).getMobilePhoneNumber().equals(phone)) {
+                                //跳过本次循环
+                                continue;
+                            }
 
-                                        addContent(list.get(i));
-                                    }
-                            mAddFriendAdapter.notifyDataSetChanged();
+                            addContent(list.get(i));
                         }
+                        mAddFriendAdapter.notifyDataSetChanged();
                     }
                 }
             }
         });
     }
 
-    private void addTitle(String title){
-
+    /**
+     * 添加头部
+     *
+     * @param title
+     */
+    private void addTitle(String title) {
         AddFriendModel model = new AddFriendModel();
-        model.setType(AddFriendAdapter.TYPE_TITLE);
+        model.setType(TYPE_TITLE);
         model.setTitle(title);
         mList.add(model);
-
-
     }
 
-
-    private String photo;
-    private boolean sex;
-    private int age;
-    private String nickName;
-    private String desc;
-    private String userId;
-
-
-
-
-    private void addContent(IMUser imUser){
+    /**
+     * 添加内容
+     *
+     * @param imUser
+     */
+    private void addContent(IMUser imUser) {
         AddFriendModel model = new AddFriendModel();
-        model.setType(AddFriendAdapter.TYPE_CONTENT);
-
+        model.setType(TYPE_CONTENT);
         model.setUserId(imUser.getObjectId());
         model.setPhoto(imUser.getPhoto());
         model.setSex(imUser.isSex());
         model.setAge(imUser.getAge());
         model.setNickName(imUser.getNickName());
         model.setDesc(imUser.getDesc());
-
         mList.add(model);
-
-        //mAddFriendAdapter.notifyDataSetChanged();
-
     }
 }
-
-
-
-

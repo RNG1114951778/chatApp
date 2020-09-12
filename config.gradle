@@ -25,9 +25,12 @@ ext{
             "gilde":'com.github.bumptech.glide:glide:4.9.0',
 
 
+
+
     ]
 
     maven = [
-            "bombUrl" :  "https://dl.bintray.com/chaozhouzhang/maven"
+            "bombUrl" :  "https://dl.bintray.com/chaozhouzhang/maven",
+            "Cloud" : "https://dl.bintray.com/rongcloud/maven"
     ]
 }

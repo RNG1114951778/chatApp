@@ -39,4 +39,23 @@
     <string name="text_me_item_title_4">隐私设置</string>
     <string name="text_me_item_title_5">分享</string>
     <string name="text_me_item_title_6">设置</string>
+    <string name="text_user_add_friend">添加好友</string>
+    <string name="text_user_chat">聊天</string>
+    <string name="text_user_audio_chat">语音电话</string>
+    <string name="text_user_video_chat">视频通话</string>
+    <string name="text_search_age">岁</string>
+    <string name="text_add_friend_title">结果</string>
+    <string name="text_add_friend_content">tuijian</string>
+    <string name="text_me_info_sex">性别</string>
+    <string name="text_me_info_age">年龄</string>
+    <string name="text_me_info_birthday">生日</string>
+    <string name="text_me_info_hobby">爱好</string>
+    <string name="text_me_info_constellation">星座</string>
+    <string name="text_me_info_status">单身状态</string>
+    <string name="text_me_info_boy">男</string>
+    <string name="text_me_info_girl">女</string>
+    <string name="sexss">性别 男/女</string>
+    <string name="xingzuo">星座</string>
+    <string name="age">年龄</string>
+    <string name="hobby">爱好</string>
 </resources>

@@ -15,4 +15,6 @@ public class Constants {
 
     public static final String SP_PHONE = "phone";
 
+    public static final String INTENT_USER_ID = "intent_user_id";
+
 }

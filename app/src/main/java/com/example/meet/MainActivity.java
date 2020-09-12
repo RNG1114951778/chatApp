@@ -22,7 +22,9 @@ import com.example.framework.base.BaseUIActivity;
 import com.example.framework.bmob.BmobManager;
 import com.example.framework.bmob.IMUser;
 import com.example.framework.entity.Constants;
+import com.example.framework.gson.TokenBean;
 import com.example.framework.manager.DialogManager;
+import com.example.framework.manager.HttpManager;
 import com.example.framework.utils.LogUtils;
 import com.example.framework.utils.SpUtils;
 import com.example.framework.view.DialogView;
@@ -33,8 +35,19 @@ import com.example.meet.fragment.SquareFragment;
 import com.example.meet.fragment.StarFragment;
 import com.example.meet.service.CloudService;
 import com.example.meet.ui.FirstUploadActivity;
+import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import io.rong.imlib.RongIMClient;
 
 
 public class MainActivity extends BaseUIActivity implements View.OnClickListener {
@@ -71,9 +84,15 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
     //跳转上传的回调用
     public static final int UPLOAD_REQUEST_CODE = 1002;
 
+    public  Disposable disposable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        RongIMClient.init(this,"8luwapkv84zpl");
+
+        Log.d("message:", "start");
         setContentView(R.layout.activity_main);
         initView();
 
@@ -141,7 +160,8 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
         String token = SpUtils.getInstance().getString(Constants.SP_TOKEN, "");
         if (!TextUtils.isEmpty(token)) {
             //启动容云服务
-            startService(new Intent(this, CloudService.class));
+            startCloudService();
+
         }else {
             //1.有这三个参数
             String tokenPhoto = BmobManager.getInstance().getUser().getTokenPhoto();
@@ -158,6 +178,13 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
         }
     }
 
+    private void startCloudService() {
+        Log.d("message", "startCloudService: ");
+        startService(new Intent(this, CloudService.class));
+
+    }
+
+
     //上传提示框
     private void createUploadDialog() {
 
@@ -168,9 +195,9 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
        iv_go_upload.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               Log.d("aaa","112");
+
                DialogManager.getInstance().hide(mUploadView);
-               Log.d("aaa","123");
+
                FirstUploadActivity.startActivity(MainActivity.this,RESULT_FIRST_USER);
            }
        });
@@ -182,11 +209,65 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
 
     //上传Token
     private void createToken() {
+        /**
+         * 融云后台获取Token
+         * 链接融云
+         */
+
+        HashMap<String,String> map = new HashMap<>();
+        map.put("userId",BmobManager.getInstance().getUser().getObjectId());
+        map.put("name",BmobManager.getInstance().getUser().getNickName());
+        map.put("portraitUri",BmobManager.getInstance().getUser().getTokenPhoto());
+
+
+        //通过OkHttp请求
+
+        disposable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+
+
+                //执行请求过程TokenBean.java
+               String json = HttpManager.getInstance().postCloudToken(map);
+                emitter.onNext(json);
+                emitter.onComplete();
+
+            }
+
+            //线程调度
+
+        }).subscribeOn(Schedulers.newThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                       parseingCloudToken(s);
+                        Log.d("thisbug", "s: "+s);
+                    }
+                });
+
+
 
         Toast.makeText(this, "创建成功", Toast.LENGTH_SHORT).show();
 
     }
 
+    private void parseingCloudToken(String s) {
+        try {
+            LogUtils.i("parsingCloudToken:" + s);
+            TokenBean tokenBean = new Gson().fromJson(s, TokenBean.class);
+            if (tokenBean.getCode() == 200) {
+                if (!TextUtils.isEmpty(tokenBean.getToken())) {
+                    //保存Token
+                    SpUtils.getInstance().putString(Constants.SP_TOKEN, tokenBean.getToken());
+                    startCloudService();
+                }
+            } else if (tokenBean.getCode() == 2007) {
+                Toast.makeText(this, "注册人数已达上限，请替换成自己的Key", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            LogUtils.i("parsingCloudToken:" + e.toString());
+        }
+    }
     /**
      * 初始化Fragment
      */
@@ -449,6 +530,15 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
                 checkToken();
             }
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (disposable.isDisposed()) {
+
+            disposable.dispose();
         }
     }
 }
