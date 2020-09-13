@@ -24,6 +24,7 @@ import com.example.framework.event.EventManager;
 //import com.example.framework.event.MessageEvent;
 //import com.example.framework.helper.GlideHelper;
 import com.example.framework.utils.LogUtils;
+import com.example.meet.ui.NewFriendActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 //
@@ -129,7 +130,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.ll_new_friend:
                 //新朋友
-               // startActivity(new Intent(getActivity(), NewFriendActivity.class));
+                startActivity(new Intent(getActivity(), NewFriendActivity.class));
                 break;
             case R.id.ll_private_set:
                 //隐私设置

@@ -47,6 +47,9 @@ dependencies {
     api rootProject.ext.dependencies["tagcloud"]
     api rootProject.ext.dependencies["circle"]
     api rootProject.ext.dependencies["gilde"]
+    api rootProject.ext.dependencies["litePal"]
+    api rootProject.ext.dependencies["EventBus"]
+    api rootProject.ext.dependencies["TableLayout"]
 
     //api 'cn.rongcloud.sdk:rtc_lib:4.0.2'  // 音视频基础能力库
     api 'cn.rongcloud.sdk:im_lib:4.0.2' // 即时通讯基础能力库

@@ -58,4 +58,25 @@
     <string name="xingzuo">星座</string>
     <string name="age">年龄</string>
     <string name="hobby">爱好</string>
+    <string name="dialog_add_firend_title">好友申请</string>
+    <string name="dialog_add_firend_msg">验证消息</string>
+    <string name="dialog_add_firend_cancel">返回</string>
+    <string name="dialog_add_firend_add">添加</string>
+    <string name="text_user_info_add_friend">Add a friend！</string>
+    <string name="text_new_friend_agree">已同意</string>
+    <string name="text_new_friend_no_agree">已拒绝</string>
+    <string name="text_chat_tab_title_1">聊天记录</string>
+    <string name="text_chat_tab_title_2">通话记录</string>
+    <string name="text_chat_tab_title_3">全部好友</string>
+    <string name="text_chat_record_img">[图片]</string>
+    <string name="text_chat_record_location">[位置]</string>
+    <string name="text_chat_record_audio">[语音]</string>
+    <string name="text_chat_record_video">[视频]</string>
+
+    <string name="text_call_record_un_answer">[Did the phone]</string>
+    <string name="text_chat_record_dial">[Have the phone]</string>
+    <string name="text_chat_record_answer">[answer the phone]</string>
+    <string name="text_all_friend_desc">个性签名</string>
+
+
 </resources>

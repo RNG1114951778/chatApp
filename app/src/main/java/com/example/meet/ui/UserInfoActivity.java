@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,7 @@ import com.example.framework.adapter.CommonAdapter;
 import com.example.framework.adapter.CommonViewHolder;
 import com.example.framework.base.BaseUIActivity;
 import com.example.framework.bmob.BmobManager;
+import com.example.framework.bmob.Friend;
 import com.example.framework.bmob.IMUser;
 import com.example.framework.cloud.CloudManager;
 import com.example.framework.entity.Constants;
@@ -49,6 +51,7 @@ public class UserInfoActivity  extends BaseUIActivity implements View.OnClickLis
     private EditText et_msg;
     private TextView tv_cancel;
     private TextView tv_add_friend;
+    private IMUser imUser;
 
     /**
      * 1.根据传递过来的ID 查询用户信息 并且显示
@@ -82,7 +85,9 @@ public class UserInfoActivity  extends BaseUIActivity implements View.OnClickLis
 
     private ImageView iv_back;
 
- //   private RelativeLayout ll_back;
+  //  private DialogView mAddFriendDialogView;
+
+    private RelativeLayout ll_back;
 
     private CircleImageView iv_user_photo;
     private TextView tv_nickname;
@@ -118,7 +123,7 @@ public class UserInfoActivity  extends BaseUIActivity implements View.OnClickLis
 
     private void initView() {
 
-        //initAddFriendDialog();
+        initAddFriendDialog();
 
         //获取用户ID
         userId = getIntent().getStringExtra(Constants.INTENT_USER_ID);
@@ -167,18 +172,18 @@ public class UserInfoActivity  extends BaseUIActivity implements View.OnClickLis
     /**
      * 添加好友的提示框
      */
-//    private void initAddFriendDialog() {
-//        mAddFriendDialogView = DialogManager.getInstance().initView(this, R.layout.dialog_send_friend);
-//
-//        et_msg = (EditText) mAddFriendDialogView.findViewById(R.id.et_msg);
-//        tv_cancel = (TextView) mAddFriendDialogView.findViewById(R.id.tv_cancel);
-//        tv_add_friend = (TextView) mAddFriendDialogView.findViewById(R.id.tv_add_friend);
-//
-//        et_msg.setText(getString(R.string.text_me_info_tips) + BmobManager.getInstance().getUser().getNickName());
-//
-//        tv_cancel.setOnClickListener(this);
-//        tv_add_friend.setOnClickListener(this);
-//    }
+    private void initAddFriendDialog() {
+        mAddFriendDialogView = DialogManager.getInstance().initView(this, R.layout.dialog_send_friend);
+
+        et_msg = (EditText) mAddFriendDialogView.findViewById(R.id.et_msg);
+        tv_cancel = (TextView) mAddFriendDialogView.findViewById(R.id.tv_cancel);
+        tv_add_friend = (TextView) mAddFriendDialogView.findViewById(R.id.tv_add_friend);
+
+       // et_msg.setText(getString(R.string.text_me_info_tips) + BmobManager.getInstance().getUser().getNickName());
+
+        tv_cancel.setOnClickListener(this);
+        tv_add_friend.setOnClickListener(this);
+    }
 
     /**
      * 查询用户信息
@@ -193,14 +198,37 @@ public class UserInfoActivity  extends BaseUIActivity implements View.OnClickLis
             public void done(List<IMUser> list, BmobException e) {
                 if (e == null) {
                     if (CommonUtils.isEmpty(list)) {
-                        IMUser imUser = list.get(0);
+
+                        imUser = list.get(0);
                         updateUserInfo(imUser);
 
                     }
                 }
             }
         });
+
+        //
+        BmobManager.getInstance().querymyFriends(new FindListener<Friend>() {
+            @Override
+            public void done(List<Friend> list, BmobException e) {
+                if (e == null) {
+                    if (CommonUtils.isEmpty(list)) {
+                        //你有一个好友列表
+                        for (int i = 0; i < list.size(); i++) {
+                            Friend friend = list.get(i);
+                            //判断这个对象中的id是否跟我目前的userId相同
+                            if (friend.getFriendUser().getObjectId().equals(userId)) {
+                                //你们是好友关系
+                                btn_add_friend.setVisibility(View.GONE);
+                                ll_is_friend.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
+
 ///更新用户信息
     private void updateUserInfo(IMUser imUser) {
         // updateUserInfo(imUser);
@@ -235,27 +263,8 @@ public class UserInfoActivity  extends BaseUIActivity implements View.OnClickLis
         mUserInfoList.add(model);
 
     }
-//        //判断好友关系
-//        BmobManager.getInstance().queryMyFriends(new FindListener<Friend>() {
-//            @Override
-//            public void done(List<Friend> list, BmobException e) {
-//                if (e == null) {
-//                    if (CommonUtils.isEmpty(list)) {
-//                        //你有一个好友列表
-//                        for (int i = 0; i < list.size(); i++) {
-//                            Friend friend = list.get(i);
-//                            //判断这个对象中的id是否跟我目前的userId相同
-//                            if (friend.getFriendUser().getObjectId().equals(userId)) {
-//                                //你们是好友关系
-//                                btn_add_friend.setVisibility(View.GONE);
-//                                ll_is_friend.setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//    }
+        //判断好友关系
+
 //
 //    /**
 //     * 更新用户信息
@@ -298,20 +307,20 @@ public class UserInfoActivity  extends BaseUIActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.tv_add_friend:
-//                String msg = et_msg.getText().toString().trim();
-//                if (TextUtils.isEmpty(msg)) {
-//                    msg = getString(R.string.text_user_info_add_friend);
-//                    return;
-//                }
-//                CloudManager.getInstance().sendTextMessage(msg,
-//                        CloudManager.TYPE_ADD_FRIEND, userId);
-//                DialogManager.getInstance().hide(mAddFriendDialogView);
-//                Toast.makeText(this, getString(R.string.text_user_resuest_succeed), Toast.LENGTH_SHORT).show();
-//                break;
-//            case R.id.tv_cancel:
-//                DialogManager.getInstance().hide(mAddFriendDialogView);
-//                break;
+            case R.id.tv_add_friend:
+                String msg = et_msg.getText().toString().trim();
+                if (TextUtils.isEmpty(msg)) {
+                    msg = getString(R.string.text_user_info_add_friend);
+                   // return;
+                }
+                CloudManager.getInstance().sendTextMessage(msg,
+                        CloudManager.TYPE_ADD_FRIEND, userId);
+                DialogManager.getInstance().hide(mAddFriendDialogView);
+             // Toast.makeText(this, getString(R.string.text_user_resuest_succeed), Toast.LENGTH_SHORT).show();
+               break;
+           case R.id.tv_cancel:
+                DialogManager.getInstance().hide(mAddFriendDialogView);
+                break;
             case R.id.ll_back:
                 finish();
                 break;
@@ -322,8 +331,8 @@ public class UserInfoActivity  extends BaseUIActivity implements View.OnClickLis
                 DialogManager.getInstance().show(mAddFriendDialogView);
                 break;
             case R.id.btn_chat:
-//                ChatActivity.startActivity(UserInfoActivity.this,
-//                        userId, imUser.getNickName(), imUser.getPhoto());
+                ChatActivity.startActivity(UserInfoActivity.this,
+                        userId, imUser.getNickName(), imUser.getPhoto());
                 break;
             case R.id.btn_audio_chat:
 //                //窗口权限

@@ -86,17 +86,27 @@
 
         <activity android:name=".test.TestActivity">
 
+
         </activity>
 
         <activity android:name=".ui.FirstUploadActivity"
             android:theme="@style/AppTheme" />
 
-        <activity android:name=".ui.AddFriendActivity">
+        <activity android:name=".ui.AddFriendActivity"/>
+
+        <activity android:name=".ui.ChatActivity">
+
+
 
 
         </activity>
 
         <activity android:name=".ui.UserInfoActivity"/>
+
+        <activity android:name=".ui.NewFriendActivity">
+
+
+        </activity>
 
 
 

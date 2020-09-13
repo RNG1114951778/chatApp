@@ -3,6 +3,9 @@ import android.content.Context;
 
 import com.example.framework.bmob.BmobManager;
 import com.example.framework.utils.SpUtils;
+
+import org.litepal.LitePal;
+
 public class Framework {
 
     private volatile static Framework mFramework;
@@ -32,6 +35,7 @@ public class Framework {
        // LogUtils.i("initFramework");
         SpUtils.getInstance().initSp(mContext);
         BmobManager.getInstance().initBmob(mContext);
+        LitePal.initialize(mContext);
 
     }
 

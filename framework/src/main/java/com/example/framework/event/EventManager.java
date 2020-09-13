@@ -2,6 +2,8 @@ package com.example.framework.event;
 
 //import org.greenrobot.eventbus.EventBus;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * FileName: EventManager
  * Founder: LiuGuiLin
@@ -35,28 +37,30 @@ public class EventManager {
     //退出登录页
     public static final int EVENT_EXIT_LOGIN_UI = 1009;
 
+    public static final int EVENT_TEST = 1009;
+
 
     /**
      * 注册
      * @param subscriber
      */
-//    public static void register(Object subscriber) {
-//        EventBus.getDefault().register(subscriber);
-//    }
-//
-//    /**
-//     * 反注册
-//     * @param subscriber
-//     */
-//    public static void unregister(Object subscriber) {
-//        EventBus.getDefault().unregister(subscriber);
-//    }
-//
-//    public static void post(int type){
-//        EventBus.getDefault().post(new MessageEvent(type));
-//    }
-//
-//    public static void post(MessageEvent event){
-//        EventBus.getDefault().post(event);
-//    }
+    public static void register(Object subscriber) {
+        EventBus.getDefault().register(subscriber);
+    }
+
+    /**
+     * 反注册
+     * @param subscriber
+     */
+    public static void unregister(Object subscriber) {
+        EventBus.getDefault().unregister(subscriber);
+    }
+
+    public static void post(int type){
+        EventBus.getDefault().post(new MessageEvent(type));
+    }
+
+    public static void post(MessageEvent event){
+        EventBus.getDefault().post(event);
+    }
 }

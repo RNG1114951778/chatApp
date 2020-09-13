@@ -1,18 +1,27 @@
 package com.example.framework.base;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
 
 
+import com.example.framework.event.EventManager;
+import com.example.framework.event.MessageEvent;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.rong.eventbus.EventBus;
 
 /**
  * FileName : BaseActivity
@@ -86,7 +95,7 @@ public class BaseActivity extends AppCompatActivity {
                 mPerList.add(mStrPermission[i]);
             }
         }
-        return mPerList.size() > 0 ? false : true;
+        return mPerList.size() <= 0;
     }
 
     /**
@@ -161,4 +170,29 @@ public class BaseActivity extends AppCompatActivity {
         startActivityForResult(intent, PERMISSION_WINDOW_REQUEST_CODE);
     }
 
+    /**
+     * Eventbus
+     * 1注册
+     * 2声明注册方法
+     * 3发送事件
+     */
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventManager.register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventManager.unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(MessageEvent event) {
+        /* Do something */
+
+    }
 }
